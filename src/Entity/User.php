@@ -82,6 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->Addresses = new ArrayCollection();
         $this->PhoneNumbers = new ArrayCollection();
+        $this->username = sprintf('%08d', hexdec(uniqid()) % 9999999);
     }
 
     public static function getRoleList(): array
