@@ -49,16 +49,6 @@ class BackendController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="backend_show", methods={"GET"})
-     */
-    public function show(User $user): Response
-    {
-        return $this->render('backend/show.html.twig', [
-            'user' => $user,
-        ]);
-    }
-
-    /**
      * @Route("/{id}/edit", name="backend_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, User $user): Response

@@ -6,6 +6,7 @@
     <h1>Create new User</h1>
 
     {{ include('backend/_form.html.twig') }}
-
-    <a href="{{ path('backend_index') }}">back to list</a>
+    <div class="back-link">
+        <a href="{{ path('backend_index') }}">back to list</a>
+    </div>
 {% endblock %}

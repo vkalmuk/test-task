@@ -83,6 +83,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->PhoneNumbers = new ArrayCollection();
     }
 
+    public static function getRoleList(): array
+    {
+        return ["ROLE_USER" => "User", "ROLE_ADMIN" => "Admin"];
+    }
+
+    public function getRolesWithName(): array
+    {
+        return array_filter(self::getRoleList(), function ($key){
+            return in_array($key, $this->getRoles());
+        }, ARRAY_FILTER_USE_KEY);
+    }
+
     /**
      * @ORM\PrePersist
      */
