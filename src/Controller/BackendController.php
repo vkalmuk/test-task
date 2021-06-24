@@ -28,6 +28,31 @@ class BackendController extends AbstractController
     }
 
     /**
+     * @Route("/search", name="backend_search", methods={"GET"})
+     */
+    public function search(UserRepository $userRepository): Response
+    {
+        $query = 'Test user';
+        $users = $this
+            ->getDoctrine()
+            ->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->andWhere('u.username like :query or u.email like :query or u.firstName like :query or u.lastName like :query')
+            ->setParameter('query', $query)
+            ->getQuery()
+            ->getResult()
+        ;
+        dd($users);
+
+        return $this->render('backend/index.html.twig', [
+            'users' => $users,
+        ]);
+    }
+
+
+
+
+    /**
      * @Route("/new", name="backend_new", methods={"GET","POST"})
      */
     public function new(Request $request, UserPasswordHasherInterface $hasher): Response
