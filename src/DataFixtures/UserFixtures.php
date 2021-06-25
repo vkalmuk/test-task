@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\PhoneNumber;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -39,6 +40,16 @@ class UserFixtures extends Fixture
         $user->setPassword($this->hasher->hashPassword($user, 'sP222222'));
         $user->setRoles(['ROLE_USER']);
         $manager->persist($user);
+
+        $phoneNumber = new PhoneNumber();
+        $phoneNumber->setPhoneNumber("+3805012345678");
+        $user->addPhoneNumber($phoneNumber);
+        $manager->persist($phoneNumber);
+
+        $phoneNumber = new PhoneNumber();
+        $phoneNumber->setPhoneNumber("+3805012342344");
+        $user->addPhoneNumber($phoneNumber);
+        $manager->persist($phoneNumber);
 
         $manager->flush();
     }

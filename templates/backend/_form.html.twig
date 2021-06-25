@@ -1,5 +1,76 @@
+
+
 {{ form_start(form, {attr: { novalidate: true}}) }}
+    {{ form_row(form.username) }}
+    {{ form_row(form.newPassword) }}
+    {{ form_row(form.firstName) }}
+    {{ form_row(form.lastName) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.dayOfBirth) }}
+    <div class="collection">
+        <label>Phone numbers</label>
+        <div
+                class="row-wrapper"
+                data-prototype="{{ _self.phoneNumberRow(form.phoneNumbers.vars.prototype)|e('html_attr') }}"
+                data-index="{{ form.phoneNumbers|length }}"
+        >
+            {% for phoneNumber in form.phoneNumbers %}
+                {{ _self.phoneNumberRow(phoneNumber) }}
+            {% endfor %}
+        </div>
+        <a class="btn btn-info add-row" href="#">+ Add phone number</a>
+    </div>
+
+    <div class="collection">
+        <label>Addresses</label>
+        <div
+                class="row-wrapper"
+                data-prototype="{{ _self.addressRow(form.addresses.vars.prototype)|e('html_attr') }}"
+                data-index="{{ form.addresses|length }}"
+        >
+            {% for address in form.addresses %}
+                {{ _self.addressRow(address) }}
+            {% endfor %}
+        </div>
+        <a class="btn btn-info add-row" href="#">+ Add address</a>
+    </div>
+
+    {{ form_row(form.roles) }}
     {{ form_widget(form) }}
-{#autocomplete="false"#}
     <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
+
+{% macro phoneNumberRow(phoneNumber) %}
+    <div class="row collection-row">
+        <div class="col-11">
+            {{ form_widget(phoneNumber.phoneNumber) }}
+        </div>
+        <div class="col-1">
+            <a href="#" class="btn btn-danger remove-row" >Remove</a>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro addressRow(address) %}
+    <div class="row collection-row">
+        <div class="col-11">
+            <div class="row">
+                <div class="col-2">
+                    {{ form_row(address.country) }}
+                </div>
+                <div class="col-4">
+                    {{ form_row(address.city) }}
+                </div>
+                <div class="col-2">
+                    {{ form_row(address.zip) }}
+                </div>
+                <div class="col-4">
+                    {{ form_row(address.street) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-1 address-remove-wrapper">
+            <a href="#" class="btn btn-danger remove-row" >Remove</a>
+        </div>
+    </div>
+{% endmacro %}
