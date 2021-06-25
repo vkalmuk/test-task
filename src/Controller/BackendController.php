@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserNewType;
+use App\Form\UserSearchType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,37 +22,21 @@ class BackendController extends AbstractController
     /**
      * @Route("/", name="backend_index", methods={"GET"})
      */
-    public function index(UserRepository $userRepository): Response
+    public function index(Request $request, UserRepository $userRepository): Response
     {
-        return $this->render('backend/index.html.twig', [
-            'users' => $userRepository->findAll(),
-        ]);
-    }
-
-    /**
-     * @Route("/search", name="backend_search", methods={"GET"})
-     */
-    public function search(UserRepository $userRepository): Response
-    {
-        $query = 'Test user';
-        $users = $this
-            ->getDoctrine()
-            ->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->andWhere('u.username like :query or u.email like :query or u.firstName like :query or u.lastName like :query')
-            ->setParameter('query', $query)
-            ->getQuery()
-            ->getResult()
-        ;
-        dd($users);
+        $searchForm = $this->createForm(UserSearchType::class, null, ['method' => 'GET']);
+        if ($request->get('filter_action') === 'reset') {
+            return $this->redirectToRoute('backend_index');
+        }
+        if ($request->get('filter_action') === 'filter') {
+            $searchForm->handleRequest($request);
+        }
 
         return $this->render('backend/index.html.twig', [
-            'users' => $users,
+            'searchFrom' => $searchForm->createView(),
+            'users' => $userRepository->search($searchForm->get('query')->getData()),
         ]);
     }
-
-
-
 
     /**
      * @Route("/new", name="backend_new", methods={"GET","POST"})
@@ -58,7 +44,7 @@ class BackendController extends AbstractController
     public function new(Request $request, UserPasswordHasherInterface $hasher): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserNewType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
