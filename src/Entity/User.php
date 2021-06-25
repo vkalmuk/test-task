@@ -6,12 +6,15 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity(fields = "username", message = "User with this username already exists")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -59,11 +62,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $lastName;
 
     /**
+     * @Assert\Email()
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $email;
 
     /**
+     * @Assert\LessThan("today")
      * @ORM\Column(type="date", nullable=true)
      */
     private $dayOfBirth;

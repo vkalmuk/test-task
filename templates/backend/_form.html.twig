@@ -1,4 +1,5 @@
-{{ form_start(form) }}
+{{ form_start(form, {attr: { novalidate: true}}) }}
     {{ form_widget(form) }}
+{#autocomplete="false"#}
     <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
